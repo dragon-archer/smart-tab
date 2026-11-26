@@ -10,6 +10,17 @@ The extension defaults `editor.detectIndentation` to `false` so that existing
 file indentation does not override the configured widths. User and workspace
 settings can override these defaults.
 
+## Usage
+
+You can install the latest version of the extension via
+the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dragon-archer.smart-tab).
+
+Alternatively, open Visual Studio code, press `Ctrl+P` or `Cmd+P` and
+type `ext install dragon-archer.smart-tab`.
+
+Also, you may build the extension directly from source code
+on [GitHub](https://github.com/dragon-archer/smart-tab).
+
 ## License
 
 MIT
