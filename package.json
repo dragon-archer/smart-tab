@@ -1,0 +1,61 @@
+{
+  "name": "smart-tab",
+  "displayName": "Smart Tab",
+  "description": "Indent by editor.indentSize columns and pack leading whitespace into tabs.",
+  "version": "0.1.0",
+  "publisher": "dragon-archer",
+  "readme": "README.md",
+  "author": {
+    "name": "dragon-archer"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": ["Other"],
+  "keywords": [
+    "indent",
+    "tab",
+    "whitespace",
+    "GNU Code Style"
+  ],
+  "bugs": {
+    "url": "https://github.com/dragon-archer/smart-tab/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dragon-archer/smart-tab.git"
+  },
+  "homepage": "https://github.com/dragon-archer/smart-tab",
+  "qna": "https://github.com/dragon-archer/smart-tab/issues",
+  "main": "./extension.js",
+  "contributes": {
+    "configurationDefaults": {
+      "editor.indentSize": 2,
+      "editor.tabSize": 8,
+      "editor.detectIndentation": false
+    },
+    "commands": [
+      {
+        "command": "smartTab.indent",
+        "title": "Smart Tab: Indent"
+      },
+      {
+        "command": "smartTab.outdent",
+        "title": "Smart Tab: Outdent"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "smartTab.indent",
+        "key": "tab",
+        "when": "editorTextFocus && !editorReadonly && !editorTabMovesFocus && !inSnippetMode && !suggestWidgetVisible && !inlineSuggestionVisible && !tabShouldAcceptInlineEdit && !tabShouldJumpToInlineEdit"
+      },
+      {
+        "command": "smartTab.outdent",
+        "key": "shift+tab",
+        "when": "editorTextFocus && !editorReadonly && !editorTabMovesFocus && !inSnippetMode"
+      }
+    ]
+  }
+}
