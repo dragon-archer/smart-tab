@@ -2,6 +2,10 @@
 
 const vscode = require('vscode');
 
+function usesManualIndentation(editor) {
+  return !!editor && !vscode.workspace.getConfiguration('editor', editor.document).get('detectIndentation');
+}
+
 function shiftIndentation(indentation, amount, tabSize) {
   let width = 0;
   for (const character of indentation) {
@@ -41,7 +45,7 @@ function shiftLines(editor, edit, direction) {
 
 function indent() {
   const editor = vscode.window.activeTextEditor;
-  if (!editor) {
+  if (!usesManualIndentation(editor)) {
     return;
   }
 
@@ -55,11 +59,49 @@ function indent() {
   return editor.edit(edit => shiftLines(editor, edit, 1));
 }
 
+function backspace() {
+  const editor = vscode.window.activeTextEditor;
+  if (!usesManualIndentation(editor)) {
+    return vscode.commands.executeCommand('deleteLeft');
+  }
+
+  const { document, selections } = editor;
+  if (!selections.every(({ active, isEmpty }) =>
+    isEmpty && document.lineAt(active.line).text[active.character - 1] === '\t'
+  )) {
+    return vscode.commands.executeCommand('deleteLeft');
+  }
+
+  return editor.edit(edit => {
+    for (const { active } of selections) {
+      edit.delete(new vscode.Range(active.translate(0, -1), active));
+    }
+  });
+}
+
 function activate(context) {
+  const updateIndentationContext = () => vscode.commands.executeCommand(
+    'setContext', 'smartTab.manualIndentation', usesManualIndentation(vscode.window.activeTextEditor),
+  );
+
   context.subscriptions.push(
     vscode.commands.registerCommand('smartTab.indent', indent),
-    vscode.commands.registerTextEditorCommand('smartTab.outdent', (editor, edit) => shiftLines(editor, edit, -1)),
+    vscode.commands.registerCommand('smartTab.backspace', backspace),
+    vscode.commands.registerTextEditorCommand('smartTab.outdent', (editor, edit) => {
+      if (usesManualIndentation(editor)) {
+        shiftLines(editor, edit, -1);
+      }
+    }),
+    vscode.window.onDidChangeActiveTextEditor(updateIndentationContext),
+    vscode.workspace.onDidChangeWorkspaceFolders(updateIndentationContext),
+    vscode.workspace.onDidChangeConfiguration(event => {
+      if (event.affectsConfiguration('editor.detectIndentation')) {
+        return updateIndentationContext();
+      }
+    }),
   );
+
+  return updateIndentationContext();
 }
 
 module.exports = { activate };

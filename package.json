@@ -29,12 +29,8 @@
   "homepage": "https://github.com/dragon-archer/smart-tab",
   "qna": "https://github.com/dragon-archer/smart-tab/issues",
   "main": "./extension.js",
+  "activationEvents": ["onStartupFinished"],
   "contributes": {
-    "configurationDefaults": {
-      "editor.indentSize": 2,
-      "editor.tabSize": 8,
-      "editor.detectIndentation": false
-    },
     "commands": [
       {
         "command": "smartTab.indent",
@@ -49,12 +45,17 @@
       {
         "command": "smartTab.indent",
         "key": "tab",
-        "when": "editorTextFocus && !editorReadonly && !editorTabMovesFocus && !inSnippetMode && !suggestWidgetVisible && !inlineSuggestionVisible && !tabShouldAcceptInlineEdit && !tabShouldJumpToInlineEdit"
+        "when": "smartTab.manualIndentation && editorTextFocus && !editorReadonly && !editorTabMovesFocus && !inSnippetMode && !suggestWidgetVisible && !inlineSuggestionVisible && !tabShouldAcceptInlineEdit && !tabShouldJumpToInlineEdit"
       },
       {
         "command": "smartTab.outdent",
         "key": "shift+tab",
-        "when": "editorTextFocus && !editorReadonly && !editorTabMovesFocus && !inSnippetMode"
+        "when": "smartTab.manualIndentation && editorTextFocus && !editorReadonly && !editorTabMovesFocus && !inSnippetMode"
+      },
+      {
+        "command": "smartTab.backspace",
+        "key": "backspace",
+        "when": "smartTab.manualIndentation && editorTextFocus && !editorReadonly && !inSnippetMode"
       }
     ]
   }
