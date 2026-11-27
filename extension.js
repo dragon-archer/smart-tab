@@ -24,7 +24,7 @@ function shiftLines(editor, edit, direction) {
   for (const { start, end } of editor.selections) {
     const lastLine = end.line - Number(end.line > start.line && end.character === 0);
     for (let line = start.line; line <= lastLine; line++) {
-      if (start.line === lastLine || !document.lineAt(line).isEmptyOrWhitespace) {
+      if (start.line === lastLine || document.lineAt(line).text.length !== 0) {
         lines.add(line);
       }
     }
