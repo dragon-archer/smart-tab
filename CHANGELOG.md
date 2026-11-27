@@ -2,6 +2,9 @@
 
 ## [UNRELEASED]
 
+- Manual `Indent using spaces` now works as expected.
+- Added a FAQ section about how to turn off the plugin for a single file.
+
 ## 0.2.0, 2026-11-27
 
 - Fixed `Backspace` so it can delete tab characters on an empty line.

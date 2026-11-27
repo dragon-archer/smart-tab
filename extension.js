@@ -2,8 +2,9 @@
 
 const vscode = require('vscode');
 
-function usesManualIndentation(editor) {
-  return !!editor && !vscode.workspace.getConfiguration('editor', editor.document).get('detectIndentation');
+function usesManualTabIndentation(editor) {
+  return !!editor && !editor.options.insertSpaces
+    && !vscode.workspace.getConfiguration('editor', editor.document).get('detectIndentation');
 }
 
 function shiftIndentation(indentation, amount, tabSize) {
@@ -47,7 +48,7 @@ function shiftLines(editor, edit, direction) {
 
 function indent() {
   const editor = vscode.window.activeTextEditor;
-  if (!usesManualIndentation(editor)) {
+  if (!usesManualTabIndentation(editor)) {
     return;
   }
 
@@ -63,7 +64,7 @@ function indent() {
 
 function backspace() {
   const editor = vscode.window.activeTextEditor;
-  if (!usesManualIndentation(editor)) {
+  if (!usesManualTabIndentation(editor)) {
     return vscode.commands.executeCommand('deleteLeft');
   }
 
@@ -83,18 +84,23 @@ function backspace() {
 
 function activate(context) {
   const updateIndentationContext = () => vscode.commands.executeCommand(
-    'setContext', 'smartTab.manualIndentation', usesManualIndentation(vscode.window.activeTextEditor),
+    'setContext', 'smartTab.manualIndentation', usesManualTabIndentation(vscode.window.activeTextEditor),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand('smartTab.indent', indent),
     vscode.commands.registerCommand('smartTab.backspace', backspace),
     vscode.commands.registerTextEditorCommand('smartTab.outdent', (editor, edit) => {
-      if (usesManualIndentation(editor)) {
+      if (usesManualTabIndentation(editor)) {
         shiftLines(editor, edit, -1);
       }
     }),
     vscode.window.onDidChangeActiveTextEditor(updateIndentationContext),
+    vscode.window.onDidChangeTextEditorOptions(({ textEditor }) => {
+      if (textEditor === vscode.window.activeTextEditor) {
+        return updateIndentationContext();
+      }
+    }),
     vscode.workspace.onDidChangeWorkspaceFolders(updateIndentationContext),
     vscode.workspace.onDidChangeConfiguration(event => {
       if (event.affectsConfiguration('editor.detectIndentation')) {
