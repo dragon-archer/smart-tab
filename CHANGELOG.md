@@ -2,6 +2,8 @@
 
 ## [UNRELEASED]
 
+## 0.3.0, 2026-11-27
+
 - Manual `Indent using spaces` now works as expected.
 - Added a FAQ section about how to turn off the plugin for a single file.
 - Lines with only indentation will also be indented on `Tab` when multiple lines are selected. Only empty lines will be ignored.

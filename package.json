@@ -2,7 +2,7 @@
   "name": "smart-tab",
   "displayName": "Smart Tab",
   "description": "Indent by editor.indentSize columns and pack leading whitespace into tabs.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "dragon-archer",
   "readme": "README.md",
   "author": {
